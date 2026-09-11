@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Automatic Water Level Indicator</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eaf6ff;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #0066cc;
+        }
+
+        .project {
+            background: white;
+            width: 400px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px gray;
+        }
+
+        .tank {
+            width: 180px;
+            height: 300px;
+            border: 5px solid #333;
+            margin: 20px auto;
+            position: relative;
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .water {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 20%;
+            background: #2196f3;
+            transition: height 0.5s;
+        }
+
+        .level {
+            margin: 15px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .status {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 15px;
+        }
+
+        .low {
+            background: #ffeb3b;
+            color: #333;
+        }
+
+        .medium {
+            background: #ff9800;
+            color: white;
+        }
+
+        .high {
+            background: #4caf50;
+            color: white;
+        }
+
+        .full {
+            background: #f44336;
+            color: white;
+        }
+
+        input[type="range"] {
+            width: 90%;
+        }
+
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: #004c99;
+        }
+
+        .pump {
+            font-size: 20px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Automatic Water Level Indicator</h1>
+
+    <div class="project">
+
+        <h2>Water Tank</h2>
+
+        <div class="tank">
+            <div class="water" id="water"></div>
+        </div>
+
+        <div class="level">
+            Water Level: <span id="percentage">20%</span>
+        </div>
+
+        <div class="status low" id="status">
+            LOW LEVEL
+        </div>
+
+        <div class="pump" id="pump">
+            Pump: ON
+        </div>
+
+        <h3>Control Water Level</h3>
+
+        <input
+            type="range"
+            id="waterSlider"
+            min="0"
+            max="100"
+            value="20"
+            oninput="changeWaterLevel()"
+        >
+
+        <br>
+
+        <button onclick="increaseWater()">Increase Water</button>
+        <button onclick="decreaseWater()">Decrease Water</button>
+
+    </div>
+
+
+    <script>
+
+        let waterLevel = 20;
+
+        function updateWaterLevel() {
+
+            document.getElementById("water").style.height =
+                waterLevel + "%";
+
+            document.getElementById("percentage").innerHTML =
+                waterLevel + "%";
+
+            document.getElementById("waterSlider").value =
+                waterLevel;
+
+            let status = document.getElementById("status");
+            let pump = document.getElementById("pump");
+
+            // Remove previous classes
+            status.classList.remove(
+                "low",
+                "medium",
+                "high",
+                "full"
+            );
+
+            // Water level conditions
+
+            if (waterLevel <= 25) {
+
+                status.innerHTML = "LOW LEVEL";
+                status.classList.add("low");
+
+                pump.innerHTML = "Pump: ON";
+
+            }
+
+            else if (waterLevel <= 50) {
+
+                status.innerHTML = "MEDIUM LEVEL";
+                status.classList.add("medium");
+
+                pump.innerHTML = "Pump: ON";
+
+            }
+
+            else if (waterLevel < 90) {
+
+                status.innerHTML = "HIGH LEVEL";
+                status.classList.add("high");
+
+                pump.innerHTML = "Pump: OFF";
+
+            }
+
+            else {
+
+                status.innerHTML = "TANK FULL";
+                status.classList.add("full");
+
+                pump.innerHTML = "Pump: OFF";
+            }
+        }
+
+
+        function changeWaterLevel() {
+
+            waterLevel =
+                document.getElementById("waterSlider").value;
+
+            updateWaterLevel();
+        }
+
+
+        function increaseWater() {
+
+            if (waterLevel < 100) {
+
+                waterLevel += 10;
+
+                if (waterLevel > 100) {
+                    waterLevel = 100;
+                }
+
+                updateWaterLevel();
+            }
+        }
+
+
+        function decreaseWater() {
+
+            if (waterLevel > 0) {
+
+                waterLevel -= 10;
+
+                if (waterLevel < 0) {
+                    waterLevel = 0;
+                }
+
+                updateWaterLevel();
+            }
+        }
+
+    </script>
+
+</body>
+</html>
